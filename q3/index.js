@@ -1,7 +1,13 @@
 const express = require('express');
+const session = require('express-session');
 const path = require('path');
 const app = express();
 
+app.use(session({
+	resave: false,
+	saveUninitialized: false,
+	secret: 'salt for cookie signing',
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use('/css', express.static(path.join(__dirname, "css")));
 
@@ -60,7 +66,7 @@ const products = [
 	},
 ];
 
-const cartProducts = [];
+//const cartProducts = [];
 
 app.get("/", (req, res, next) => {
 	res.render("product.ejs", { products: products });
@@ -68,28 +74,45 @@ app.get("/", (req, res, next) => {
 
 app.get("/shoppingCart", (req, res, next) => {
 	res.render("shoppingcart.ejs", {
-		products: cartProducts,
+		products: req.session.cart ? req.session.cart : [],
 	});
 });
 
 app.post("/addtoCart", (req, res, next) => {
 	
-	var idx = -1;
-	var element = products.find((item) => item.id.toString() === req.body.id)
-	
-	idx = cartProducts.findIndex((obj => obj.id == req.body.id));
-		
-	if(idx != -1) {		
-		cartProducts[idx].quantity += 1;
-		cartProducts[idx].totalprice = Number(cartProducts[idx].totalprice) + Number(element.price);
+	if(req.session.cart === undefined) {
+		req.session.cart = [
+			{
+				name: req.body.name,
+				price: req.body.price,
+				id: req.body.id,
+				quantity: 1,
+				totalprice: 0,
+			},
+		];
 	}
 	else {
-		element.quantity = 1;
-		element.totalprice = element.price;
-		cartProducts.push(element);
+		var idx = -1;
+		var element = req.session.cart.find((item) => item.id.toString() === req.body.id)
+		
+		idx = req.session.cart.findIndex((obj => obj.id == req.body.id));
+			
+		if(element === undefined) {		
+			req.session.cart.push({
+				name: req.body.name,
+				price: req.body.price,
+				id: req.body.id,
+				quantity: 1,
+				totalprice: req.body.price,
+			});
+		}
+		else {
+			req.session.cart[idx].quantity += 1;
+			req.session.cart[idx].totalprice = Number(req.session.cart[idx].totalprice) + Number(element.price);;
+		}
 	}
 	
-	res.redirect("/shoppingCart");
+	res.redirect(303, "/shoppingCart");
 });
 
 app.listen(3000);
