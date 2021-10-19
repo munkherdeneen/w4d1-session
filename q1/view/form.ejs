@@ -1,0 +1,27 @@
+<%- include('head.ejs')%>
+
+	<h1>Add Cookie</h1>
+	<form action="/addcookie" method="post">
+		<label>Enter cookie name: </label>
+		<input type="text" id="cookiename" name="cookiename"/>
+		<label>Enter cookie value: </label>
+		<input type="text" id="cookievalue" name="cookievalue"/>
+		<button type="submit">Add cookie with value</button>
+	</form>
+	<h3>Active cookies:</h3>
+	<div>
+		<table>
+			<tr>
+				<th>Cookie name</th>
+				<th>Cookie value</th>
+			</tr>
+			<tr>
+			<% for(var i=0; i<cookie.length; i++) { %>
+				<td>cookie</td>
+				<td>cookie[i].value</td>	
+			<% } %>
+			</tr>
+		</table>
+	</div>
+
+<%- include('end.ejs')%>

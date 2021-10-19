@@ -1,0 +1,25 @@
+h1 {
+  margin: 1rem 3rem 0;
+}
+
+.container {
+  padding: 2rem;
+  display: flex;
+}
+
+.product-item {
+  max-width: 200px;
+  border: 1px solid #6d6d6d;
+  border-radius: 8px;
+  margin: 0.5rem;
+  padding: 0.5rem;
+}
+
+.product-item > p > a {
+  font-size: 18px;
+  color: #333;
+}
+
+.product-item p {
+  color: #6d6d6d;
+}

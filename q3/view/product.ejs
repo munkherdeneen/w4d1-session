@@ -1,0 +1,25 @@
+<%- include('head.ejs')%>
+
+	<h1>Products</h1>
+    <div class="container">
+        <% for(var i=0; i < products.length; i++) { %>
+            <div class="product-item">
+                <p><a>
+                        <%= products[i].name %>
+                    </a>
+                </p>
+                <p>
+                    <%= products[i].description %>
+                </p>
+                <span>
+                    $<%= products[i].price %>
+                </span>
+                <form action="/addtoCart" method="post">
+                    <input type="number" id="id" name="id" value="<%= products[i].id %>" hidden>
+                    <input class="add-to-cart" type="submit" value="Add to my cart">
+                </form>
+            </div>
+            <% } %>
+    </div>
+</body>
+</html>
